@@ -24,16 +24,23 @@ func main() {
 	database, _ := db.NewDatabase(dbHost, dbPort, dbUser, dbPassword, dbBase)
 
 	ss := subservice.NewSubService(database)
-	envir := &Env{SubService: ss}
+	env := &Env{SubService: ss}
 
-	http.HandleFunc("/subscribe", envir.SubscribeHandle)
+	http.HandleFunc("/subscribe", env.SubscribeHandle)
+
+	go ss.Run()
 
 	log.Println("Started to listen and serve on :8080")
 	log.Fatalln(http.ListenAndServe(":8080", nil))
+
+
 }
 
-func (check *Env)SubscribeHandle(w http.ResponseWriter, r *http.Request) {
+func (env *Env)SubscribeHandle(w http.ResponseWriter, r *http.Request) {
+	link := r.URL.Query().Get("link")
+	mail := r.URL.Query().Get("mail")
 
+	env.SubService.AddSubscriberToProduct(subservice.TrimProductLink(link), mail)
 
-	fmt.Fprint(w, check.SubService.ProductSubs)
+	fmt.Fprint(w, env.SubService.ProductSubs, env.SubService.ProductPrices)
 }

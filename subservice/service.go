@@ -2,7 +2,8 @@ package subservice
 
 import (
 	"database/sql"
-	"strings"
+	"net/smtp"
+	"sync"
 )
 
 /*
@@ -17,27 +18,18 @@ type productID string
 type productPrice string
 
 type SubService struct {
-	db           *sql.DB
-	ProductSubs  map[productID][]string
-	productPrice map[productID]string
+	mailerAuth    smtp.Auth
+	mu            *sync.Mutex
+	db            *sql.DB
+	ProductSubs   map[productID][]string
+	ProductPrices map[productID]string
 }
 
 func NewSubService(db *sql.DB) *SubService {
 	return &SubService{
-		db:           db,
-		ProductSubs:  make(map[productID][]string),
-		productPrice: make(map[productID]string),
+		mailerAuth: 	smtp.PlainAuth("", "buyerjobassignment@yandex.ru", "192837465", "smtp.yandex.ru"),
+		db:            	db,
+		ProductSubs:   	make(map[productID][]string),
+		ProductPrices: 	make(map[productID]string),
 	}
 }
-
-// -------------------------------------------------- в functions
-
-func (ss *SubService)AddSubscriber(id productID, mail string) {
-	ss.ProductSubs[id] = append(ss.ProductSubs[id], mail)
-}
-
-func TrimProductLink(link string) productID {
-	idx := strings.LastIndex(link, "_")
-	return productID(link[idx+1:])
-}
-
