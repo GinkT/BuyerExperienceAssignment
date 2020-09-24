@@ -1,8 +1,8 @@
 package subservice
 
 import (
-	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -14,10 +14,7 @@ import (
 	"github.com/lib/pq"
 )
 
-func (SubServ *SubService)InitFromDB(db *sql.DB) error {
-	return nil
-}
-
+// Загружает в память список подписок на товары из БД
 func (SubServ *SubService) LoadSubMapFromDB() error {
 	sqlStatement := `
 		SELECT * FROM public."products"
@@ -30,7 +27,7 @@ func (SubServ *SubService) LoadSubMapFromDB() error {
 	defer rows.Close()
 
 	for rows.Next() {
-		var key productID
+		var key ProductID
 		var value []string
 		err := rows.Scan(&key, pq.Array(&value))
 		if err != nil {
@@ -38,9 +35,15 @@ func (SubServ *SubService) LoadSubMapFromDB() error {
 		}
 		SubServ.ProductSubs[key] = value
 	}
+
+	// Заполняем таблицу цен продуктов актуальной информацией
+	for key, _ := range SubServ.ProductSubs {
+		SubServ.ProductPrices[key], _ = GetProductPrice(key)
+	}
 	return nil
 }
 
+// Загружает в БД список подписок на товары из памяти
 func (SubServ *SubService) LoadSubMapToDB() error {
 	for key, value := range SubServ.ProductSubs {
 		sqlStatement := `
@@ -59,16 +62,25 @@ func (SubServ *SubService) LoadSubMapToDB() error {
 	return nil
 }
 
-func (SubServ *SubService)AddSubscriberToProduct(id productID, mail string) {
+// Добавляет в базу подписку на продукт
+func (SubServ *SubService)AddSubscriberToProduct(id ProductID, mail string) error {
+	// Если продукта ещё нет в списке отслеживаемых товаров - добавляем
 	if _, ok := SubServ.ProductPrices[id]; !ok {
-		SubServ.ProductPrices[id], _ = GetProductPrice(id)
+		productPrice, err := GetProductPrice(id)
+		if err != nil {
+			return err
+		}
+		SubServ.ProductPrices[id] = productPrice
 	}
 	SubServ.ProductSubs[id] = append(SubServ.ProductSubs[id], mail)
+
+	return nil
 }
 
+// Загружает подписки из БД, запускает цикл обновления цен.
+// Раз в 40 секунд проходит по подпискаем и актуализирует значения.
 func (SubServ *SubService)Run() {
 	SubServ.LoadSubMapFromDB()
-	fmt.Println(SubServ.ProductSubs)
 
 	for {
 		time.Sleep(40 * time.Second)
@@ -82,15 +94,37 @@ func (SubServ *SubService)Run() {
 	}
 }
 
-// Обрезает ссылку и получает ID объявления
-func TrimProductLink(link string) productID {
-	idx := strings.LastIndex(link, "_")
-	return productID(link[idx+1:])
+// Отправляет email с обновленной стоимостью всем подписчикам из emails[]
+func (SubServ *SubService)SendMailToFollowers(cost string, emails []string) {
+	message := `From: "Other User" <buyerjobassignment@yandex.ru>
+cc: 
+Subject: The price of your subscribed product changed! Its costs now:` + cost
+
+	if err := smtp.SendMail("smtp.yandex.ru:587", SubServ.mailerAuth, "buyerjobassignment@yandex.ru", emails, []byte(message)); err != nil {
+		fmt.Println("Error SendMail: ", err)
+	}
+	fmt.Println("Send emails to:", emails)
 }
 
+// Отправляет письмо. Внутри письма ссылка с подтверждением
+func (SubServ *SubService)SendConfirmationEmail(link, email string) {
+	message := `From: "Сервис подписки" <buyerjobassignment@yandex.ru>
+cc: 
+Subject: Please enter this link to a browser! http://localhost:8181/subscribe?link=` + link + `&mail=` + email + `&code=` + SubServ.ConfirmCode
+	if err := smtp.SendMail("smtp.yandex.ru:587", SubServ.mailerAuth, "buyerjobassignment@yandex.ru", []string{email}, []byte(message)); err != nil {
+		fmt.Println("Error SendMail: ", err)
+	}
+	fmt.Println("Send emails to:", email)
+}
+
+// Обрезает ссылку и получает ID объявления
+func TrimProductLink(link string) ProductID {
+	idx := strings.LastIndex(link, "_")
+	return ProductID(link[idx+1:])
+}
 
 // Получает цену объявления используя API авито. Входной параметр - ID объявления
-func GetProductPrice(id productID) (string, error) {
+func GetProductPrice(id ProductID) (string, error) {
 	log.Println("Requested price for product id:", id)
 
 	resp, err := http.Get("https://m.avito.ru/api/14/items/" + string(id) + "?key=af0deccbgcgidddjgnvljitntccdduijhdinfgjgfjir")
@@ -101,8 +135,7 @@ func GetProductPrice(id productID) (string, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		log.Println(err)
-		return "", err
+		return "", errors.New("Invalid link")
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -120,15 +153,4 @@ func GetProductPrice(id productID) (string, error) {
 
 	log.Println("Unmarshalled JSON for price, got:", price)
 	return price.(string), nil
-}
-
-func (ss *SubService)SendMailToFollowers(cost string, emails []string) {
-	message := `From: "Other User" <buyerjobassignment@yandex.ru>
-cc: 
-Subject: The price of your subscribed product changed! Its costs now:` + cost
-
-	if err := smtp.SendMail("smtp.yandex.ru:587", ss.mailerAuth, "buyerjobassignment@yandex.ru", emails, []byte(message)); err != nil {
-		fmt.Println("Error SendMail: ", err)
-	}
-	fmt.Println("Send emails to:", emails)
 }
