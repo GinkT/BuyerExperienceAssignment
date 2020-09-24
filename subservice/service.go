@@ -3,7 +3,6 @@ package subservice
 import (
 	"database/sql"
 	"net/smtp"
-	"sync"
 )
 
 /*
@@ -15,11 +14,8 @@ import (
  */
 
 type productID string
-type productPrice string
-
 type SubService struct {
 	mailerAuth    smtp.Auth
-	mu            *sync.Mutex
 	db            *sql.DB
 	ProductSubs   map[productID][]string
 	ProductPrices map[productID]string

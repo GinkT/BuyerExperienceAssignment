@@ -11,9 +11,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="98f85784-0372-4c4c-a8ef-8460f1e10c61" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/subservice/functions.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/subservice/functions_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/subservice/functions.go" beforeDir="false" afterPath="$PROJECT_DIR$/subservice/functions.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/subservice/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/subservice/service.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -105,6 +107,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -118,21 +121,25 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1060" y="466" key="FileChooserDialogImpl/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600876308725" />
-    <state width="2517" height="401" key="GridCell.Tab.0.bottom" timestamp="1600879282340">
+    <state width="2517" height="401" key="GridCell.Tab.0.bottom" timestamp="1600943180108">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600879282340" />
-    <state width="2517" height="401" key="GridCell.Tab.0.center" timestamp="1600879282340">
+    <state width="2517" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600943180108" />
+    <state width="2517" height="401" key="GridCell.Tab.0.center" timestamp="1600943180108">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600879282340" />
-    <state width="2517" height="401" key="GridCell.Tab.0.left" timestamp="1600879282340">
+    <state width="2517" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600943180108" />
+    <state width="2517" height="401" key="GridCell.Tab.0.left" timestamp="1600943180108">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600879282340" />
-    <state width="2517" height="401" key="GridCell.Tab.0.right" timestamp="1600879282340">
+    <state width="2517" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600943180108" />
+    <state width="2517" height="401" key="GridCell.Tab.0.right" timestamp="1600943180108">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600879282340" />
+    <state width="2517" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600943180108" />
+    <state x="1123" y="460" key="refactoring.ChangeSignatureDialog" timestamp="1600941523716">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1123" y="460" key="refactoring.ChangeSignatureDialog/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600941523716" />
   </component>
 </project>

@@ -1,6 +1,7 @@
 package subservice
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -9,7 +10,54 @@ import (
 	"net/smtp"
 	"strings"
 	"time"
+
+	"github.com/lib/pq"
 )
+
+func (SubServ *SubService)InitFromDB(db *sql.DB) error {
+	return nil
+}
+
+func (SubServ *SubService) LoadSubMapFromDB() error {
+	sqlStatement := `
+		SELECT * FROM public."products"
+	`
+	rows, err := SubServ.db.Query(sqlStatement)
+	if err != nil {
+		log.Println("Error happened during load from DB!", err)
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var key productID
+		var value []string
+		err := rows.Scan(&key, pq.Array(&value))
+		if err != nil {
+			log.Fatal(err)
+		}
+		SubServ.ProductSubs[key] = value
+	}
+	return nil
+}
+
+func (SubServ *SubService) LoadSubMapToDB() error {
+	for key, value := range SubServ.ProductSubs {
+		sqlStatement := `
+		INSERT INTO public."products"
+		VALUES ($1, $2)
+		ON CONFLICT ("productid")
+		DO UPDATE 
+		SET "subscribedusers" = $2
+		`
+		_, err := SubServ.db.Exec(sqlStatement, key, pq.Array(value))
+		if err != nil {
+			log.Println("Error happened during load to DB!", err)
+			return err
+		}
+	}
+	return nil
+}
 
 func (SubServ *SubService)AddSubscriberToProduct(id productID, mail string) {
 	if _, ok := SubServ.ProductPrices[id]; !ok {
@@ -19,6 +67,9 @@ func (SubServ *SubService)AddSubscriberToProduct(id productID, mail string) {
 }
 
 func (SubServ *SubService)Run() {
+	SubServ.LoadSubMapFromDB()
+	fmt.Println(SubServ.ProductSubs)
+
 	for {
 		time.Sleep(40 * time.Second)
 
@@ -31,6 +82,7 @@ func (SubServ *SubService)Run() {
 	}
 }
 
+// Обрезает ссылку и получает ID объявления
 func TrimProductLink(link string) productID {
 	idx := strings.LastIndex(link, "_")
 	return productID(link[idx+1:])
