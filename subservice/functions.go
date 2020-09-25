@@ -3,11 +3,9 @@ package subservice
 import (
 	"encoding/json"
 	"errors"
-
 	"io/ioutil"
 	"log"
 	"net/http"
-
 	"strings"
 	"time"
 
@@ -65,6 +63,7 @@ func (SubServ *SubService) LoadSubMapToDB() error {
 // Добавляет в базу подписку на продукт
 func (SubServ *SubService)AddSubscriberToProduct(id ProductID, mail string) error {
 	// Если продукта ещё нет в списке отслеживаемых товаров - добавляем
+	SubServ.muPP.Lock()
 	if _, ok := SubServ.ProductPrices[id]; !ok {
 		productPrice, err := GetProductPrice(id)
 		if err != nil {
@@ -72,29 +71,44 @@ func (SubServ *SubService)AddSubscriberToProduct(id ProductID, mail string) erro
 		}
 		SubServ.ProductPrices[id] = productPrice
 	}
+	SubServ.muPP.Unlock()
+
+	SubServ.muPS.Lock()
 	SubServ.ProductSubs[id] = append(SubServ.ProductSubs[id], mail)
+	SubServ.muPS.Unlock()
 
 	return nil
 }
 
 // Загружает подписки из БД, запускает цикл обновления цен.
-// Раз в 40 секунд проходит по подпискаем и актуализирует значения.
+// Раз в n секунд(SYNC_TIME config) проходит по подпискаем и актуализирует значения.
 func (SubServ *SubService)Run() {
 	SubServ.LoadSubMapFromDB()
 
 	go func () {
 		for {
-			time.Sleep(40 * time.Second)
-			log.Println("[SubService] Starting an update look")
+			time.Sleep(time.Duration(SubServ.SyncTime) * time.Second)
+			log.Println("[SubService] Starting an update loop")
+
 			for productID, productPrice := range SubServ.ProductPrices {
-				currentPrice, _ := GetProductPrice(productID)
+				currentPrice, err := GetProductPrice(productID)
+				if err != nil {
+					log.Println("[SubService] Error in Run loop:", err)
+					continue
+				}
 				if currentPrice != productPrice {
 					log.Printf("[SubService] Found changed price for product (%s): %s\n", productID, currentPrice)
+
+					SubServ.muPS.Lock()
 					SubServ.SendMailToFollowers(productID, currentPrice, SubServ.ProductSubs[productID])
+					SubServ.muPS.Unlock()
+
+					SubServ.muPP.Lock()
 					SubServ.ProductPrices[productID] = currentPrice
+					SubServ.muPP.Unlock()
 				}
 			}
-			log.Println("[SubService] Ending an update look")
+			log.Println("[SubService] Ending an update loop")
 		}
 	} ()
 }

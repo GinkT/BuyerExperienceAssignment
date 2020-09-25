@@ -15,28 +15,24 @@ import (
 	"time"
 )
 
-const (
-	dbHost = "db"
-	dbPort = 5432
-	dbUser = "postgres"
-	dbPassword = "qwerty"
-	dbBase = "SubscribeService"
-)
-
 type Env struct {
 	SubService *subservice.SubService
 }
 
 func main() {
 	//Соединение с БД
-	database, err := db.NewDatabase(dbHost, dbPort, dbUser, dbPassword, dbBase)
+	database, err := db.NewDatabase()
 	if err != nil {
 		log.Fatalln("Database was not connected!")
 	}
 	defer database.Close()
 
 	// Инициализация сервиса
-	ss := subservice.NewSubService(database)
+	ss, err := subservice.NewSubService(database)
+	if err != nil {
+		log.Fatalln("Error creating SubService!")
+	}
+	log.Printf("[SubService] Service was created with sync time: %d, confirm code: %s\n", ss.SyncTime, ss.ConfirmCode)
 	env := &Env{SubService: ss}
 
 	// Запуск сервиса
