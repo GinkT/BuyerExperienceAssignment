@@ -29,7 +29,8 @@ func (SubServ *SubService) LoadSubMapFromDB() error {
 		var value []string
 		err := rows.Scan(&key, pq.Array(&value))
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			return err
 		}
 		SubServ.ProductSubs[key] = value
 	}
@@ -60,7 +61,7 @@ func (SubServ *SubService) LoadSubMapToDB() error {
 	return nil
 }
 
-// Добавляет в базу подписку на продукт
+// Добавляет в сервис подписку на продукт
 func (SubServ *SubService)AddSubscriberToProduct(id ProductID, mail string) error {
 	// Если продукта ещё нет в списке отслеживаемых товаров - добавляем
 	SubServ.muPP.Lock()

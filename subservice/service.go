@@ -58,6 +58,8 @@ func NewSubService(db *sql.DB) (*SubService, error) {
 		mailerAuth: 	smtp.PlainAuth("", "avitobuyerexperience@yandex.ru", "192837465", "smtp.yandex.ru"),
 		db:            	db,
 		ProductSubs:   	make(map[ProductID][]string),
+		muPS: 			&sync.Mutex{},
 		ProductPrices: 	make(map[ProductID]string),
+		muPP: 			&sync.Mutex{},
 	}, nil
 }

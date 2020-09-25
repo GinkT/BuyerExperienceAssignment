@@ -13,7 +13,6 @@
     <list default="true" id="98f85784-0372-4c4c-a8ef-8460f1e10c61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/subservice/functions.go" beforeDir="false" afterPath="$PROJECT_DIR$/subservice/functions.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/subservice/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/subservice/service.go" afterDir="false" />
     </list>
@@ -125,22 +124,22 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1060" y="466" key="FileChooserDialogImpl/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600964229450" />
-    <state width="2517" height="401" key="GridCell.Tab.0.bottom" timestamp="1601046795736">
+    <state width="2517" height="401" key="GridCell.Tab.0.bottom" timestamp="1601059845320">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601046795736" />
-    <state width="2517" height="401" key="GridCell.Tab.0.center" timestamp="1601046795736">
+    <state width="2517" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601059845320" />
+    <state width="2517" height="401" key="GridCell.Tab.0.center" timestamp="1601059845320">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601046795736" />
-    <state width="2517" height="401" key="GridCell.Tab.0.left" timestamp="1601046795736">
+    <state width="2517" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601059845320" />
+    <state width="2517" height="401" key="GridCell.Tab.0.left" timestamp="1601059845320">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601046795736" />
-    <state width="2517" height="401" key="GridCell.Tab.0.right" timestamp="1601046795736">
+    <state width="2517" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601059845320" />
+    <state width="2517" height="401" key="GridCell.Tab.0.right" timestamp="1601059845320">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601046795736" />
+    <state width="2517" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601059845320" />
     <state width="82" height="441" key="SqlResolveConfigurable" timestamp="1600964224912">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -161,5 +160,16 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="943" y="315" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601035728379" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/subservice/functions.go</url>
+          <line>123</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
