@@ -3,7 +3,6 @@ package subservice
 import (
 	"encoding/json"
 	"errors"
-	"runtime"
 
 	"io/ioutil"
 	"log"
@@ -22,7 +21,7 @@ func (SubServ *SubService) LoadSubMapFromDB() error {
 	`
 	rows, err := SubServ.db.Query(sqlStatement)
 	if err != nil {
-		log.Println("Error happened during load from DB!", err)
+		log.Println("[Database] Error happened getting rows from DB!", err)
 		return err
 	}
 	defer rows.Close()
@@ -90,12 +89,12 @@ func (SubServ *SubService)Run() {
 			for productID, productPrice := range SubServ.ProductPrices {
 				currentPrice, _ := GetProductPrice(productID)
 				if currentPrice != productPrice {
+					log.Printf("[SubService] Found changed price for product (%s): %s\n", productID, currentPrice)
 					SubServ.SendMailToFollowers(productID, currentPrice, SubServ.ProductSubs[productID])
 					SubServ.ProductPrices[productID] = currentPrice
 				}
 			}
 			log.Println("[SubService] Ending an update look")
-			runtime.Gosched()
 		}
 	} ()
 }
@@ -108,7 +107,7 @@ func TrimProductLink(link string) ProductID {
 
 // Получает цену объявления используя API авито. Входной параметр - ID объявления
 func GetProductPrice(id ProductID) (string, error) {
-	log.Println("Requested price for product id:", id)
+	log.Println("[SubService] Requested price for product id:", id)
 
 	resp, err := http.Get("https://m.avito.ru/api/14/items/" + string(id) + "?key=af0deccbgcgidddjgnvljitntccdduijhdinfgjgfjir")
 	if err != nil {
@@ -134,6 +133,6 @@ func GetProductPrice(id ProductID) (string, error) {
 	json.Unmarshal(body, &result)
 	price := result["price"].(map[string]interface{})["value"]
 
-	log.Println("Unmarshalled JSON for price, got:", price)
+	log.Printf("[SubService] Got price for product(%s): %s", id, price)
 	return price.(string), nil
 }

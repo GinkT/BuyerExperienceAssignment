@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"encoding/json"
 	"github.com/GinkT/BuyerExperienceAssignment/db"
 	"github.com/GinkT/BuyerExperienceAssignment/subservice"
 	"log"
@@ -40,17 +40,16 @@ func main() {
 	env := &Env{SubService: ss}
 
 	// Запуск сервиса
-	go ss.Run()
+	ss.Run()
 
 	// HTTP API сервиса
 	srv := &http.Server{}
 	http.Handle("/subscribe",  ValidSubscribeHandler(env.confirmSubscriber(http.HandlerFunc(env.SubscribeHandle))))
 	log.Println("Started to listen and serve on :8181")
 	ln, _ := net.Listen("tcp", ":8181")
-	go func() {
+	go func () {
 		log.Fatalln(srv.Serve(ln))
-	}()
-	//go log.Fatalln(http.ListenAndServe(":8181", srv.Handler))
+	} ()
 
 	// Graceful shutdown
 	log.Println("Ready for graceful")
@@ -65,15 +64,34 @@ func main() {
 	log.Println("Gracefully shut down!")
 }
 
+type OkJson struct {
+	ProductID 	subservice.ProductID		`json:"productid"`
+	Email		string						`json:"email"`
+	Message		string						`json:"message"`
+}
+
 // Метод подписки на объявление
 func (env *Env)SubscribeHandle(w http.ResponseWriter, r *http.Request) {
 	link := r.URL.Query().Get("link")
 	mail := r.URL.Query().Get("mail")
 
-	env.SubService.AddSubscriberToProduct(subservice.TrimProductLink(link), mail)
+	prodID := subservice.TrimProductLink(link)
+	env.SubService.AddSubscriberToProduct(prodID, mail)
+
+	okMsg := &OkJson{
+		ProductID: prodID,
+		Email:     mail,
+		Message:   "Subscribe Confirmed! Congrats!",
+	}
+	json.NewEncoder(w).Encode(&okMsg)
+	w.WriteHeader(http.StatusOK)
 }
 
 // ----------------------------------------------------- MiddleWare for SubscribeHandle
+
+type ErrorJson struct {
+	Error map[string]interface{} 		`json:"error"`
+}
 
 // Валидация входных параметров link, mail
 func ValidSubscribeHandler(subHandle http.Handler) http.Handler {
@@ -82,13 +100,34 @@ func ValidSubscribeHandler(subHandle http.Handler) http.Handler {
 		re := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 		switch {
 		case link == "":
-			fmt.Fprintf(w, "Empty link!")
+			error := &ErrorJson{
+				Error: map[string]interface{}{
+					"code": "404",
+					"message": "Empty link!",
+				},
+			}
+			json.NewEncoder(w).Encode(&error)
+			w.WriteHeader(http.StatusNotFound)
 			return
 		case mail == "":
-			fmt.Fprintf(w, "Empty mail!")
+			error := &ErrorJson{
+				Error: map[string]interface{}{
+					"code": "404",
+					"message": "Empty mail!",
+				},
+			}
+			json.NewEncoder(w).Encode(&error)
+			w.WriteHeader(http.StatusNotFound)
 			return
 		case !re.MatchString(mail):
-			fmt.Fprintf(w, "Invalid mail!")
+			error := &ErrorJson{
+				Error: map[string]interface{}{
+					"code": "404",
+					"message": "Invalid email!",
+				},
+			}
+			json.NewEncoder(w).Encode(&error)
+			w.WriteHeader(http.StatusNotFound)
 			return
 		}
 		subHandle.ServeHTTP(w, r)
@@ -103,10 +142,24 @@ func (env *Env)confirmSubscriber(validatedHandler http.Handler) http.Handler {
 		switch {
 		case confirmCode == "":
 			env.SubService.SendConfirmationEmail(link, mail)
-			fmt.Fprintf(w, "Please, confirm you subscription using link from email sent to you by our service!")
+			error := &ErrorJson{
+				Error: map[string]interface{}{
+					"code": "409",
+					"message": "Пожалуйста, подтвердите вашу подписку, воспользовавшись ссылкой из письма!",
+				},
+			}
+			json.NewEncoder(w).Encode(&error)
+			w.WriteHeader(http.StatusConflict)
 			return
 		case confirmCode != env.SubService.ConfirmCode:
-			fmt.Fprintf(w, "Please, confirm you subscription using link from email sent to you by our service!")
+			error := &ErrorJson{
+				Error: map[string]interface{}{
+					"code": "404",
+					"message": "Ошибка подтверждения! Воспользуйтесь ссылкой из письма!",
+				},
+			}
+			json.NewEncoder(w).Encode(&error)
+			w.WriteHeader(http.StatusOK)
 			return
 		}
 		validatedHandler.ServeHTTP(w, r)
