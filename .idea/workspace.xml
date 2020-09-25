@@ -11,9 +11,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="98f85784-0372-4c4c-a8ef-8460f1e10c61" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/subservice/functions_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/subservice/mail.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/init.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/subservice/functions.go" beforeDir="false" afterPath="$PROJECT_DIR$/subservice/functions.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/subservice/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/subservice/service.go" afterDir="false" />
@@ -46,6 +51,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -113,33 +119,49 @@
     <integration-enabled>true</integration-enabled>
   </component>
   <component name="WindowStateProjectService">
-    <state x="734" y="354" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1600876321519">
+    <state x="720" y="555" key="#SQL_Resolution_Scopes" timestamp="1600964231724">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="734" y="354" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600876321519" />
-    <state x="1060" y="466" key="FileChooserDialogImpl" timestamp="1600876308725">
+    <state x="720" y="555" key="#SQL_Resolution_Scopes/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600964231724" />
+    <state x="734" y="354" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1600964259947">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1060" y="466" key="FileChooserDialogImpl/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600876308725" />
-    <state width="2517" height="401" key="GridCell.Tab.0.bottom" timestamp="1600943180108">
+    <state x="734" y="354" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600964259947" />
+    <state x="1060" y="466" key="FileChooserDialogImpl" timestamp="1600964229450">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600943180108" />
-    <state width="2517" height="401" key="GridCell.Tab.0.center" timestamp="1600943180108">
+    <state x="1060" y="466" key="FileChooserDialogImpl/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600964229450" />
+    <state width="2517" height="401" key="GridCell.Tab.0.bottom" timestamp="1601046795736">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600943180108" />
-    <state width="2517" height="401" key="GridCell.Tab.0.left" timestamp="1600943180108">
+    <state width="2517" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601046795736" />
+    <state width="2517" height="401" key="GridCell.Tab.0.center" timestamp="1601046795736">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600943180108" />
-    <state width="2517" height="401" key="GridCell.Tab.0.right" timestamp="1600943180108">
+    <state width="2517" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601046795736" />
+    <state width="2517" height="401" key="GridCell.Tab.0.left" timestamp="1601046795736">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600943180108" />
-    <state x="1123" y="460" key="refactoring.ChangeSignatureDialog" timestamp="1600941523716">
+    <state width="2517" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601046795736" />
+    <state width="2517" height="401" key="GridCell.Tab.0.right" timestamp="1601046795736">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1123" y="460" key="refactoring.ChangeSignatureDialog/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600941523716" />
+    <state width="2517" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601046795736" />
+    <state width="82" height="441" key="SqlResolveConfigurable" timestamp="1600964224912">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="82" height="441" key="SqlResolveConfigurable/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600964224912" />
+    <state x="-1946" y="-16" width="1872" height="945" maximized="true" key="dock-window-1" timestamp="1600964649219">
+      <screen x="-1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-1946" y="-16" width="1872" height="945" maximized="true" key="dock-window-1/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1600964649219" />
+    <state x="1123" y="460" key="refactoring.ChangeSignatureDialog" timestamp="1601024432619">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1123" y="460" key="refactoring.ChangeSignatureDialog/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601024432619" />
+    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup" timestamp="1601035728379">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400/-1920.0.1920.1040@0.0.2560.1400" timestamp="1601035728379" />
   </component>
 </project>

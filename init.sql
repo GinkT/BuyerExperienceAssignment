@@ -1,4 +1,4 @@
 CREATE TABLE products (
-	productID   		  text           PRIMARY KEY,
+	ProductID   		  text           PRIMARY KEY,
 	subscribedUsers       text 				ARRAY
 );

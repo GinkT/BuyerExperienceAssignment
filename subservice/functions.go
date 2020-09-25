@@ -3,11 +3,12 @@ package subservice
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
+	"runtime"
+
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/smtp"
+
 	"strings"
 	"time"
 
@@ -82,39 +83,21 @@ func (SubServ *SubService)AddSubscriberToProduct(id ProductID, mail string) erro
 func (SubServ *SubService)Run() {
 	SubServ.LoadSubMapFromDB()
 
-	for {
-		time.Sleep(40 * time.Second)
-
-		for productID, productPrice := range SubServ.ProductPrices {
-			currentPrice, _ := GetProductPrice(productID)
-			if currentPrice != productPrice {
-				SubServ.SendMailToFollowers(currentPrice, SubServ.ProductSubs[productID])
+	go func () {
+		for {
+			time.Sleep(40 * time.Second)
+			log.Println("[SubService] Starting an update look")
+			for productID, productPrice := range SubServ.ProductPrices {
+				currentPrice, _ := GetProductPrice(productID)
+				if currentPrice != productPrice {
+					SubServ.SendMailToFollowers(productID, currentPrice, SubServ.ProductSubs[productID])
+					SubServ.ProductPrices[productID] = currentPrice
+				}
 			}
+			log.Println("[SubService] Ending an update look")
+			runtime.Gosched()
 		}
-	}
-}
-
-// Отправляет email с обновленной стоимостью всем подписчикам из emails[]
-func (SubServ *SubService)SendMailToFollowers(cost string, emails []string) {
-	message := `From: "Other User" <buyerjobassignment@yandex.ru>
-cc: 
-Subject: The price of your subscribed product changed! Its costs now:` + cost
-
-	if err := smtp.SendMail("smtp.yandex.ru:587", SubServ.mailerAuth, "buyerjobassignment@yandex.ru", emails, []byte(message)); err != nil {
-		fmt.Println("Error SendMail: ", err)
-	}
-	fmt.Println("Send emails to:", emails)
-}
-
-// Отправляет письмо. Внутри письма ссылка с подтверждением
-func (SubServ *SubService)SendConfirmationEmail(link, email string) {
-	message := `From: "Сервис подписки" <buyerjobassignment@yandex.ru>
-cc: 
-Subject: Please enter this link to a browser! http://localhost:8181/subscribe?link=` + link + `&mail=` + email + `&code=` + SubServ.ConfirmCode
-	if err := smtp.SendMail("smtp.yandex.ru:587", SubServ.mailerAuth, "buyerjobassignment@yandex.ru", []string{email}, []byte(message)); err != nil {
-		fmt.Println("Error SendMail: ", err)
-	}
-	fmt.Println("Send emails to:", email)
+	} ()
 }
 
 // Обрезает ссылку и получает ID объявления

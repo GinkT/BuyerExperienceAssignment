@@ -1,11 +1,11 @@
 FROM golang:latest 
  
-WORKDIR /app 
+WORKDIR /usr/local/go/src/main
 
-COPY ./ /app
+COPY ./ /usr/local/go/src/main
 
 RUN go mod download && go build -o main .
 
 EXPOSE 8181
 
-ENTRYPOINT go run main.go
+ENTRYPOINT ["/usr/local/go/src/main/main"]

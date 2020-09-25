@@ -35,7 +35,7 @@ type SubService struct {
 func NewSubService(db *sql.DB) *SubService {
 	return &SubService{
 		ConfirmCode:    "0000",
-		mailerAuth: 	smtp.PlainAuth("", "buyerjobassignment@yandex.ru", "192837465", "smtp.yandex.ru"),
+		mailerAuth: 	smtp.PlainAuth("", "avitobuyerexperience@yandex.ru", "192837465", "smtp.yandex.ru"),
 		db:            	db,
 		ProductSubs:   	make(map[ProductID][]string),
 		ProductPrices: 	make(map[ProductID]string),
