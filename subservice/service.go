@@ -55,7 +55,7 @@ func NewSubService(db *sql.DB) (*SubService, error) {
 	return &SubService{
 		SyncTime:		syncTime,
 		ConfirmCode:    "0000",
-		mailerAuth: 	smtp.PlainAuth("", "avitobuyerexperience@yandex.ru", "192837465", "smtp.yandex.ru"),
+		mailerAuth: 	smtp.PlainAuth("", "avitobuyerexperience@vladromanov.tech", "192837465", "smtp.yandex.ru"),
 		db:            	db,
 		ProductSubs:   	make(map[ProductID][]string),
 		muPS: 			&sync.Mutex{},
